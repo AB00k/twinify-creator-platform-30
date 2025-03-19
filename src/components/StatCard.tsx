@@ -12,6 +12,7 @@ interface StatCardProps {
   trendValue?: string;
   trendDirection?: "up" | "down" | "neutral";
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const StatCard: React.FC<StatCardProps> = ({
@@ -22,9 +23,13 @@ const StatCard: React.FC<StatCardProps> = ({
   trendValue,
   trendDirection = "neutral",
   className,
+  style,
 }) => {
   return (
-    <div className={cn("stat-card animate-fade-in", className)}>
+    <div 
+      className={cn("stat-card animate-fade-in", className)}
+      style={style}
+    >
       <div className="flex justify-between items-start">
         <IconBadge icon={icon} className={iconClassName} />
         {trendValue && (

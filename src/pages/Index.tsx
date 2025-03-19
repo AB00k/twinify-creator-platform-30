@@ -5,6 +5,7 @@ import StatCard from "@/components/StatCard";
 import AreaChart from "@/components/AreaChart";
 import MonthlySpendCard from "@/components/MonthlySpendCard";
 import BudgetCard from "@/components/BudgetCard";
+import { Link } from "react-router-dom";
 import {
   Tag,
   Receipt,
@@ -16,6 +17,7 @@ import {
   Tag as TagIcon,
   PlusCircle,
   ChevronRight,
+  Star,
 } from "lucide-react";
 
 // Generate chart data
@@ -66,13 +68,24 @@ const Index = () => {
           >
             Delivery Discount Performance
           </h1>
-          <Button 
-            className={`mt-4 md:mt-0 bg-dashRed hover:bg-red-600 text-white rounded-full transition-all duration-300 flex items-center ${isLoaded ? 'animate-scale-in' : 'opacity-0'}`}
-            style={{ animationDelay: '0.2s' }}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Create a new campaign
-          </Button>
+          <div className="flex gap-3">
+            <Link to="/reviews">
+              <Button 
+                className={`mt-4 md:mt-0 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-full transition-all duration-300 flex items-center ${isLoaded ? 'animate-scale-in' : 'opacity-0'}`}
+                style={{ animationDelay: '0.15s' }}
+              >
+                <Star className="mr-2 h-4 w-4 text-yellow-500" />
+                View Reviews & Ratings
+              </Button>
+            </Link>
+            <Button 
+              className={`mt-4 md:mt-0 bg-dashRed hover:bg-red-600 text-white rounded-full transition-all duration-300 flex items-center ${isLoaded ? 'animate-scale-in' : 'opacity-0'}`}
+              style={{ animationDelay: '0.2s' }}
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Create a new campaign
+            </Button>
+          </div>
         </div>
 
         {/* Overview Section */}
