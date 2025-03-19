@@ -43,7 +43,7 @@ const Reviews = () => {
     },
   ];
 
-  // Experience ratings data
+  // Experience ratings data - simplified to show ratings from 1-5
   const experienceData = [
     { name: "Food Quality", value: 4.5, color: "#FF5722" },
     { name: "Service", value: 4.2, color: "#2196F3" },
@@ -52,18 +52,72 @@ const Reviews = () => {
     { name: "Value", value: 3.9, color: "#9575CD" },
   ];
 
-  // Positive reviews
+  // Positive reviews with additional details
   const positiveReviews = [
-    { id: "1", text: "The food arrived hot and was packaged very well. Delivery guy was polite too!" },
-    { id: "2", text: "Always consistent quality and the staff is very professional and friendly." },
-    { id: "3", text: "Best value for money in the area. Will order again." },
+    { 
+      id: "1", 
+      text: "Outstanding service and quality. My new favorite restaurant!",
+      platform: "Google",
+      date: "2025-02-10",
+      rating: 5,
+      customerName: "Emma W.",
+      location: "Downtown",
+      category: "Cafe"
+    },
+    { 
+      id: "2", 
+      text: "Food was delicious and arrived hot. Great value for money.",
+      platform: "Careem",
+      date: "2025-01-07",
+      rating: 5,
+      customerName: "Fatima K.",
+      location: "JBR",
+      category: "Express"
+    },
+    { 
+      id: "3", 
+      text: "Absolutely loved the food! Fast delivery and excellent packaging.",
+      platform: "Talabat",
+      date: "2025-01-29",
+      rating: 5,
+      customerName: "John D.",
+      location: "Downtown",
+      category: "Premium"
+    },
   ];
 
-  // Negative reviews
+  // Negative reviews with additional details
   const negativeReviews = [
-    { id: "1", text: "Waited over an hour for delivery that was promised in 30 minutes." },
-    { id: "2", text: "Food was cold and didn't taste fresh. Very disappointing." },
-    { id: "3", text: "The packaging was leaking and ruined the rest of my order." },
+    { 
+      id: "1", 
+      text: "Waited over an hour for delivery that was promised in 30 minutes.",
+      platform: "Noon",
+      date: "2025-02-15",
+      rating: 2,
+      customerName: "Ahmed S.",
+      location: "Marina",
+      category: "Express"
+    },
+    { 
+      id: "2", 
+      text: "Food was cold and didn't taste fresh. Very disappointing.",
+      platform: "Talabat",
+      date: "2025-01-18",
+      rating: 1,
+      customerName: "Sarah M.",
+      location: "Business Bay",
+      category: "Standard"
+    },
+    { 
+      id: "3", 
+      text: "The packaging was leaking and ruined the rest of my order.",
+      platform: "Careem",
+      date: "2025-02-03",
+      rating: 2,
+      customerName: "Michael R.",
+      location: "DIFC",
+      category: "Premium"
+    },
   ];
 
   // Positive review themes
@@ -95,27 +149,29 @@ const Reviews = () => {
               Analyzing customer reviews across multiple delivery platforms
             </p>
           </div>
-          <Link to="/">
-            <Button className="mt-4 md:mt-0 bg-dashRed hover:bg-red-600 text-white rounded-full transition-all duration-300">
-              Back to Discount Performance
-            </Button>
-          </Link>
+          <div className="flex flex-col mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-4 md:flex-row">
+            {/* Tabs Navigation moved to the right */}
+            <Tabs defaultValue="overview" className="mb-0">
+              <TabsList className="bg-white rounded-full p-1 border">
+                <TabsTrigger value="overview" className="rounded-full">
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger value="detailedAnalysis" className="rounded-full">
+                  Detailed Analysis
+                </TabsTrigger>
+                <TabsTrigger value="platformReviews" className="rounded-full">
+                  Platform Reviews
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            
+            <Link to="/">
+              <Button className="bg-dashRed hover:bg-red-600 text-white rounded-full transition-all duration-300">
+                Back to Discount Performance
+              </Button>
+            </Link>
+          </div>
         </div>
-
-        {/* Tabs Navigation */}
-        <Tabs defaultValue="overview" className="mb-8">
-          <TabsList className="bg-white rounded-full p-1 border">
-            <TabsTrigger value="overview" className="rounded-full">
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="detailedAnalysis" className="rounded-full">
-              Detailed Analysis
-            </TabsTrigger>
-            <TabsTrigger value="platformReviews" className="rounded-full">
-              Platform Reviews
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
 
         {/* Platform Ratings Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -132,13 +188,13 @@ const Reviews = () => {
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Sentiment Analysis */}
+          {/* Sentiment Analysis - Improved layout with chart on side */}
           <div className="bg-white rounded-xl p-6 shadow-sm">
             <h2 className="text-xl font-bold mb-4">Sentiment Analysis</h2>
             <SentimentChart data={sentimentData} />
           </div>
 
-          {/* Experience Ratings */}
+          {/* Experience Ratings - Simplified horizontal bar chart */}
           <div className="bg-white rounded-xl p-6 shadow-sm">
             <h2 className="text-xl font-bold mb-4">Dine-in Experience Ratings</h2>
             <ExperienceBarChart data={experienceData} />
@@ -147,7 +203,7 @@ const Reviews = () => {
 
         {/* Reviews Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Positive Reviews */}
+          {/* Positive Reviews with detailed info */}
           <ReviewTabPanel
             title="Top Positive Reviews"
             subtitle="Highest rated customer feedback"
@@ -157,7 +213,7 @@ const Reviews = () => {
             bulletPoints={positiveThemes}
           />
 
-          {/* Negative Reviews */}
+          {/* Negative Reviews with detailed info */}
           <ReviewTabPanel
             title="Top Negative Reviews"
             subtitle="Areas that may need improvement"

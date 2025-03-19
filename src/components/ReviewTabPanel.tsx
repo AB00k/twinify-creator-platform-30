@@ -3,10 +3,17 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageSquare, List } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ReviewCard from "./ReviewCard";
 
 interface Review {
   id: string;
   text: string;
+  platform?: string;
+  date?: string;
+  rating?: number;
+  customerName?: string;
+  location?: string;
+  category?: string;
 }
 
 interface ReviewTabPanelProps {
@@ -64,11 +71,9 @@ const ReviewTabPanel: React.FC<ReviewTabPanelProps> = ({
         </TabsContent>
 
         <TabsContent value="fullReviews" className="mt-0">
-          <div className="space-y-4">
+          <div className="space-y-2">
             {reviews.map((review) => (
-              <div key={review.id} className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm">{review.text}</p>
-              </div>
+              <ReviewCard key={review.id} review={review} />
             ))}
           </div>
         </TabsContent>

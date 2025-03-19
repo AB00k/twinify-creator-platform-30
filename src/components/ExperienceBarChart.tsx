@@ -1,6 +1,6 @@
 
 import React from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, LabelList } from "recharts";
 import { cn } from "@/lib/utils";
 
 interface ExperienceRating {
@@ -15,42 +15,43 @@ interface ExperienceBarChartProps {
 }
 
 const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({ data, className }) => {
-  const maxValue = Math.max(...data.map(item => item.value)) + 0.5;
-
   return (
-    <div className={cn("h-80", className)}>
+    <div className={cn("h-72", className)}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
           margin={{
             top: 20,
-            right: 30,
-            left: 20,
+            right: 10,
+            left: 10,
             bottom: 20,
           }}
+          barSize={30}
+          layout="vertical"
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
           <XAxis 
-            dataKey="name" 
+            type="number"
+            domain={[0, 5]} 
+            tickCount={6}
             axisLine={false}
             tickLine={false}
             tick={{ fontSize: 12 }}
           />
           <YAxis 
-            domain={[0, maxValue]} 
+            type="category"
+            dataKey="name" 
             axisLine={false}
             tickLine={false}
             tick={{ fontSize: 12 }}
+            width={120}
           />
-          {data.map((entry, index) => (
-            <Bar 
-              key={index}
-              dataKey="value" 
-              fill={entry.color} 
-              radius={[4, 4, 0, 0]}
-              barSize={40}
-            />
-          ))}
+          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+            <LabelList dataKey="value" position="right" formatter={(value: number) => value.toFixed(1)} />
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
