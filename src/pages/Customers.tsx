@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CustomerSegmentCard from "@/components/CustomerSegmentCard";
 import CustomerProgressBar from "@/components/CustomerProgressBar";
+import CustomerGeography from "@/components/CustomerGeography";
 
 const Customers = () => {
   // Platform distribution data
@@ -272,7 +273,7 @@ const Customers = () => {
         </div>
 
         {/* Customer Segments Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 animate-fade-in">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 animate-fade-in mb-8">
           {customerSegments.map((segment, index) => (
             <CustomerSegmentCard
               key={index}
@@ -285,6 +286,9 @@ const Customers = () => {
             />
           ))}
         </div>
+        
+        {/* Customer Geography Section */}
+        <CustomerGeography />
       </div>
     </div>
   );
