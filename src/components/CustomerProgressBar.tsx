@@ -22,13 +22,13 @@ const CustomerProgressBar: React.FC<CustomerProgressBarProps> = ({
   
   return (
     <div className={cn("w-full", className)}>
-      <div className="w-full h-2 rounded-full overflow-hidden mb-2" style={{ backgroundColor: bgColor }}>
+      <div className="w-full h-2.5 rounded-full overflow-hidden mb-2" style={{ backgroundColor: bgColor }}>
         <div 
-          className={cn("h-full rounded-full transition-all duration-500", color)} 
+          className={cn("h-full rounded-full transition-all duration-500 ease-out", color)} 
           style={{ width: `${safeValue}%` }}
         />
       </div>
-      {label && <p className="text-sm text-gray-500 text-center">{label}</p>}
+      {label && <p className="text-sm text-gray-600 text-center">{label}</p>}
     </div>
   );
 };

@@ -149,7 +149,7 @@ const Customers = () => {
           {/* Platform Distribution */}
           <div className="bg-white rounded-xl p-6 shadow-sm">
             <h3 className="text-lg font-semibold mb-4">Platform Distribution</h3>
-            <div className="h-60">
+            <div className="flex items-center justify-center h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -175,6 +175,14 @@ const Customers = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
+            <div className="grid grid-cols-5 gap-1 mt-3">
+              {platformData.map((entry, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div className="w-3 h-3 rounded-full mb-1" style={{ backgroundColor: entry.color }}></div>
+                  <p className="text-xs text-gray-500">{entry.name}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* User Identification */}
@@ -191,7 +199,7 @@ const Customers = () => {
               <h2 className="text-4xl font-bold mb-4">{userIdentificationData.totalCustomers}</h2>
               
               <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-4">
-                <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center justify-center">
+                <div className="bg-blue-50 rounded-xl p-3 flex flex-col items-center justify-center">
                   <div className="flex items-center mb-2">
                     <UserCircle className="h-5 w-5 text-blue-500 mr-2" />
                     <span className="text-sm font-medium">User ID</span>
@@ -199,7 +207,7 @@ const Customers = () => {
                   <p className="text-2xl font-bold">{userIdentificationData.userId}</p>
                 </div>
                 
-                <div className="bg-purple-50 rounded-xl p-4 flex flex-col items-center justify-center">
+                <div className="bg-purple-50 rounded-xl p-3 flex flex-col items-center justify-center">
                   <div className="flex items-center mb-2">
                     <Phone className="h-5 w-5 text-purple-500 mr-2" />
                     <span className="text-sm font-medium">Phone</span>
@@ -230,7 +238,7 @@ const Customers = () => {
               <h2 className="text-4xl font-bold mb-4">AED {revenueData.totalRevenue.toLocaleString()}</h2>
               
               <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-4">
-                <div className="bg-green-50 rounded-xl p-4 flex flex-col">
+                <div className="bg-green-50 rounded-xl p-3 flex flex-col">
                   <div className="flex items-center mb-2">
                     <div className="p-1">
                       <CreditCard className="h-5 w-5 text-green-500" />
@@ -241,7 +249,7 @@ const Customers = () => {
                   <p className="text-sm text-gray-500">{revenueData.online.percentage}% of revenue</p>
                 </div>
                 
-                <div className="bg-yellow-50 rounded-xl p-4 flex flex-col">
+                <div className="bg-yellow-50 rounded-xl p-3 flex flex-col">
                   <div className="flex items-center mb-2">
                     <div className="p-1">
                       <CreditCard className="h-5 w-5 text-yellow-500" />
@@ -264,7 +272,7 @@ const Customers = () => {
         </div>
 
         {/* Customer Segments Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 animate-fade-in">
           {customerSegments.map((segment, index) => (
             <CustomerSegmentCard
               key={index}
@@ -273,6 +281,7 @@ const Customers = () => {
               percentage={segment.percentage}
               icon={segment.icon}
               bgColor={segment.bgColor}
+              className="hover:shadow-lg hover:transform hover:scale-105 transition-all duration-300"
             />
           ))}
         </div>

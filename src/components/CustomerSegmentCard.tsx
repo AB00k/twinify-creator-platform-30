@@ -21,17 +21,17 @@ const CustomerSegmentCard: React.FC<CustomerSegmentCardProps> = ({
 }) => {
   return (
     <div className={cn(
-      "bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300",
+      "bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300",
       className
     )}>
       <div className="flex flex-col items-center text-center">
-        <div className={cn("w-14 h-14 rounded-full flex items-center justify-center mb-3", bgColor)}>
+        <div className={cn("w-12 h-12 rounded-full flex items-center justify-center mb-2", bgColor)}>
           {icon}
         </div>
         <h3 className="text-sm text-gray-500 mb-1">{title}</h3>
-        <p className="text-2xl font-bold">{value}</p>
+        <p className="text-xl font-bold">{value}</p>
         {percentage !== undefined && (
-          <p className="text-sm text-gray-500">{percentage}%</p>
+          <p className="text-xs text-gray-500">{percentage}%</p>
         )}
       </div>
     </div>
