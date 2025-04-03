@@ -149,8 +149,8 @@ const Customers = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Platform Distribution */}
           <div className="bg-white rounded-xl p-6 shadow-sm">
-            <h3 className="text-lg font-semibold mb-4">Platform Distribution</h3>
-            <div className="flex items-center justify-center h-56">
+            <h3 className="text-lg font-semibold mb-2">Platform Distribution</h3>
+            <div className="flex items-center justify-center h-52">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -287,7 +287,7 @@ const Customers = () => {
           ))}
         </div>
         
-        {/* Customer Geography Section */}
+        {/* Customer Geography Section - updated component */}
         <CustomerGeography />
       </div>
     </div>

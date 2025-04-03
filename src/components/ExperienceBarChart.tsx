@@ -25,19 +25,13 @@ interface ExperienceBarChartProps {
 }
 
 const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({ data, className }) => {
-  // Enhanced purple palette
-  const purpleColors = [
-    "#9b87f5", // Primary Purple
-    "#7E69AB", // Secondary Purple
-    "#6E59A5", // Tertiary Purple
-    "#8B5CF6", // Vivid Purple
-    "#D6BCFA"  // Light Purple
-  ];
+  // Use consistent light purple color
+  const purpleColor = "#D6BCFA";
 
-  // Apply the palette to the data
-  const enhancedData = data.map((item, index) => ({
+  // Apply the color to all data items
+  const enhancedData = data.map((item) => ({
     ...item,
-    color: purpleColors[index % purpleColors.length]
+    color: purpleColor
   }));
 
   const CustomTooltip = ({ active, payload }: any) => {
