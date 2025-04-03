@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
@@ -70,7 +71,7 @@ const Index = () => {
     <div className="min-h-screen bg-dashGrayLight">
       <div className="container px-4 py-8 mx-auto">
         {/* Header Section */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2 text-dashRed">
               Discount Performance Dashboard
@@ -79,7 +80,7 @@ const Index = () => {
               Analyzing discount effectiveness and budget utilization
             </p>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex flex-col mt-4 md:mt-0 space-y-4 md:space-y-0 md:flex-row md:space-x-4">
             <Link to="/customers">
               <Button className="bg-purple-500 hover:bg-purple-600 text-white">
                 Customer Segmentation
