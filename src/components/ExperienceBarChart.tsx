@@ -105,9 +105,6 @@ const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({
                 axisLine={false}
                 tickLine={false}
                 tick={{ fontSize: 12 }}
-                angle={-45}
-                textAnchor="end"
-                tickMargin={10}
               />
               <YAxis 
                 type="number"
@@ -123,18 +120,13 @@ const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({
           <Bar 
             dataKey="value" 
             radius={isVertical ? [0, 6, 6, 0] : [6, 6, 0, 0]}
-            animationDuration={1500}
-            animationBegin={300}
-            className="cursor-pointer"
+            animationDuration={1000}
           >
             {enhancedData.map((entry, index) => (
               <Cell 
                 key={`cell-${index}`} 
                 fill={entry.color} 
-                className="hover:opacity-80 transition-opacity duration-300"
-                style={{
-                  filter: "drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1))"
-                }}
+                className="hover:opacity-80 transition-opacity"
               />
             ))}
             {showPercentage && (

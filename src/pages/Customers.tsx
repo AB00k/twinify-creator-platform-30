@@ -11,7 +11,8 @@ import {
   CreditCard,
   ChevronDown, 
   Phone, 
-  UserCircle
+  UserCircle,
+  Info
 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -108,68 +109,62 @@ const Customers = () => {
 
   return (
     <div className="min-h-screen bg-dashGrayLight">
-      <div className="container px-4 py-8 mx-auto max-w-7xl">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+      <div className="container px-4 py-6 mx-auto max-w-7xl">
+        {/* Simplified Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold mb-2" style={{ color: "#FF4747" }}>
-              Customer Segmentation Dashboard
+            <h1 className="text-2xl font-bold mb-1" style={{ color: "#FF4747" }}>
+              Customer Segmentation
             </h1>
-            <p className="text-gray-600">
-              Analyzing customer segments and behavior across platforms
+            <p className="text-gray-600 text-sm">
+              Overview of customer segments across platforms
             </p>
           </div>
-          <div className="flex flex-col mt-4 md:mt-0 space-y-4 md:space-y-0 md:space-x-4 md:flex-row">
-            {/* Tabs Navigation on the right */}
-            <Tabs defaultValue="overview" className="mb-0">
-              <TabsList className="bg-white rounded-full p-1 border">
-                <TabsTrigger value="overview" className="rounded-full">
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger value="behaviors" className="rounded-full">
-                  Behaviors
-                </TabsTrigger>
-                <TabsTrigger value="preferences" className="rounded-full">
-                  Preferences
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-            
+          <div className="flex mt-4 md:mt-0 space-x-4">
             <Link to="/">
-              <Button className="bg-dashRed hover:bg-red-600 text-white rounded-full transition-all duration-300">
-                Back to Discount Performance
+              <Button className="bg-dashRed hover:bg-red-600 text-white transition-all duration-300">
+                Back to Dashboard
               </Button>
             </Link>
           </div>
         </div>
 
-        {/* Customer Overview Section */}
-        <h2 className="text-2xl font-bold mb-4">Customer Overview</h2>
+        {/* Customer Segments Grid - Simplified */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+          {customerSegments.map((segment, index) => (
+            <CustomerSegmentCard
+              key={index}
+              title={segment.title}
+              value={segment.value}
+              percentage={segment.percentage}
+              icon={segment.icon}
+              bgColor={segment.bgColor}
+              className="hover:shadow-md transition-all duration-300"
+            />
+          ))}
+        </div>
         
-        {/* Main Analysis Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Main Analysis Grid - Balanced Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {/* Platform Distribution */}
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <h3 className="text-lg font-semibold mb-2">Platform Distribution</h3>
-            <div className="flex items-center justify-center h-52">
+          <div className="bg-white rounded-xl p-4 shadow-sm">
+            <h3 className="text-base font-semibold mb-2">Platform Distribution</h3>
+            <div className="flex items-center justify-center h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={platformData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
+                    innerRadius={50}
+                    outerRadius={70}
                     paddingAngle={5}
                     dataKey="value"
-                    label={({ name, value }) => `${name}: ${value}%`}
-                    labelLine={false}
                   >
                     {platformData.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`} 
                         fill={entry.color}
-                        className="hover:opacity-80 transition-opacity duration-300"
                       />
                     ))}
                   </Pie>
@@ -177,7 +172,7 @@ const Customers = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="grid grid-cols-5 gap-1 mt-3">
+            <div className="grid grid-cols-5 gap-1">
               {platformData.map((entry, index) => (
                 <div key={index} className="flex flex-col items-center">
                   <div className="w-3 h-3 rounded-full mb-1" style={{ backgroundColor: entry.color }}></div>
@@ -188,78 +183,62 @@ const Customers = () => {
           </div>
 
           {/* User Identification */}
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">User Identification</h3>
-              <Button variant="outline" className="flex items-center text-sm font-medium">
-                Show Details <ChevronDown className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-            
-            <div className="flex flex-col items-center mb-6">
-              <p className="text-gray-500 mb-1">Total Customers</p>
-              <h2 className="text-4xl font-bold mb-4">{userIdentificationData.totalCustomers}</h2>
+          <div className="bg-white rounded-xl p-4 shadow-sm">
+            <h3 className="text-base font-semibold mb-3">User Identification</h3>
+            <div className="flex flex-col items-center mb-4">
+              <p className="text-gray-500 mb-1 text-sm">Total Customers</p>
+              <h2 className="text-3xl font-bold mb-3">{userIdentificationData.totalCustomers}</h2>
               
-              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-4">
-                <div className="bg-blue-50 rounded-xl p-3 flex flex-col items-center justify-center">
-                  <div className="flex items-center mb-2">
-                    <UserCircle className="h-5 w-5 text-blue-500 mr-2" />
-                    <span className="text-sm font-medium">User ID</span>
+              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-3">
+                <div className="bg-blue-50 rounded-lg p-2 flex flex-col items-center justify-center">
+                  <div className="flex items-center mb-1">
+                    <UserCircle className="h-4 w-4 text-blue-500 mr-1" />
+                    <span className="text-sm">User ID</span>
                   </div>
-                  <p className="text-2xl font-bold">{userIdentificationData.userId}</p>
+                  <p className="text-xl font-bold">{userIdentificationData.userId}</p>
                 </div>
                 
-                <div className="bg-purple-50 rounded-xl p-3 flex flex-col items-center justify-center">
-                  <div className="flex items-center mb-2">
-                    <Phone className="h-5 w-5 text-purple-500 mr-2" />
-                    <span className="text-sm font-medium">Phone</span>
+                <div className="bg-purple-50 rounded-lg p-2 flex flex-col items-center justify-center">
+                  <div className="flex items-center mb-1">
+                    <Phone className="h-4 w-4 text-purple-500 mr-1" />
+                    <span className="text-sm">Phone</span>
                   </div>
-                  <p className="text-2xl font-bold">{userIdentificationData.phone}</p>
+                  <p className="text-xl font-bold">{userIdentificationData.phone}</p>
                 </div>
               </div>
             </div>
             
             <CustomerProgressBar 
               value={userIdentificationData.percentageUserId} 
-              label={`Delivery platforms: ${userIdentificationData.percentageUserId}% user ID`}
+              label={`${userIdentificationData.percentageUserId}% with user ID`}
               color="bg-blue-500"
             />
           </div>
 
           {/* Revenue by Payment */}
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Revenue by Payment</h3>
-              <Button variant="outline" className="flex items-center text-sm font-medium">
-                Show Details <ChevronDown className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-            
-            <div className="flex flex-col items-center mb-6">
-              <p className="text-gray-500 mb-1">Total Revenue</p>
-              <h2 className="text-4xl font-bold mb-4">AED {revenueData.totalRevenue.toLocaleString()}</h2>
+          <div className="bg-white rounded-xl p-4 shadow-sm">
+            <h3 className="text-base font-semibold mb-3">Revenue by Payment</h3>
+            <div className="flex flex-col items-center mb-4">
+              <p className="text-gray-500 mb-1 text-sm">Total Revenue</p>
+              <h2 className="text-3xl font-bold mb-3">AED {revenueData.totalRevenue.toLocaleString()}</h2>
               
-              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-4">
-                <div className="bg-green-50 rounded-xl p-3 flex flex-col">
-                  <div className="flex items-center mb-2">
-                    <div className="p-1">
-                      <CreditCard className="h-5 w-5 text-green-500" />
-                    </div>
-                    <span className="text-sm font-medium ml-1">Online</span>
+              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-3">
+                <div className="bg-green-50 rounded-lg p-2 flex flex-col">
+                  <div className="flex items-center mb-1">
+                    <CreditCard className="h-4 w-4 text-green-500 mr-1" />
+                    <span className="text-sm">Online</span>
                   </div>
-                  <p className="text-xl font-bold">AED {revenueData.online.amount.toLocaleString()}</p>
-                  <p className="text-sm text-gray-500">{revenueData.online.percentage}% of revenue</p>
+                  <p className="text-lg font-bold">AED {revenueData.online.amount.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500">{revenueData.online.percentage}% of revenue</p>
                 </div>
                 
-                <div className="bg-yellow-50 rounded-xl p-3 flex flex-col">
-                  <div className="flex items-center mb-2">
-                    <div className="p-1">
-                      <CreditCard className="h-5 w-5 text-yellow-500" />
-                    </div>
-                    <span className="text-sm font-medium ml-1">Cash</span>
+                <div className="bg-yellow-50 rounded-lg p-2 flex flex-col">
+                  <div className="flex items-center mb-1">
+                    <CreditCard className="h-4 w-4 text-yellow-500 mr-1" />
+                    <span className="text-sm">Cash</span>
                   </div>
-                  <p className="text-xl font-bold">AED {revenueData.cash.amount.toLocaleString()}</p>
-                  <p className="text-sm text-gray-500">{revenueData.cash.percentage}% of revenue</p>
+                  <p className="text-lg font-bold">AED {revenueData.cash.amount.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500">{revenueData.cash.percentage}% of revenue</p>
                 </div>
               </div>
             </div>
@@ -272,30 +251,27 @@ const Customers = () => {
             />
           </div>
         </div>
-
-        {/* Customer Segments Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 animate-fade-in mb-8">
-          {customerSegments.map((segment, index) => (
-            <CustomerSegmentCard
-              key={index}
-              title={segment.title}
-              value={segment.value}
-              percentage={segment.percentage}
-              icon={segment.icon}
-              bgColor={segment.bgColor}
-              className="hover:shadow-lg hover:transform hover:scale-105 transition-all duration-300"
-            />
-          ))}
-        </div>
         
-        {/* Customer Geography Section */}
-        <CustomerGeography />
-        
-        {/* Customer Cohort Section */}
-        <CustomerCohort />
-        
-        {/* Customer Profile Section */}
-        <CustomerProfile />
+        {/* Main Content with Tabs for Better Organization */}
+        <Tabs defaultValue="geography" className="mb-6">
+          <TabsList className="mb-4 bg-white border rounded-lg w-full md:w-auto justify-start overflow-x-auto">
+            <TabsTrigger value="geography" className="px-4 py-2">Geography</TabsTrigger>
+            <TabsTrigger value="cohort" className="px-4 py-2">Customer Retention</TabsTrigger>
+            <TabsTrigger value="profile" className="px-4 py-2">Customer Filters</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="geography" className="mt-0">
+            <CustomerGeography />
+          </TabsContent>
+          
+          <TabsContent value="cohort" className="mt-0">
+            <CustomerCohort />
+          </TabsContent>
+          
+          <TabsContent value="profile" className="mt-0">
+            <CustomerProfile />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
