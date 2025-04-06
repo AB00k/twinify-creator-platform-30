@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import ExperienceBarChart from "./ExperienceBarChart";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   MapPin,
   Building, 
   SplitSquareVertical,
-  BarChart2
+  BarChart2,
+  ChevronLeft
 } from "lucide-react";
 
 // Platform colors
@@ -217,16 +219,30 @@ const CustomerGeography = () => {
   }
   
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <div>
-          <h3 className="text-lg font-semibold mb-1">{chartTitle}</h3>
-          <p className="text-sm text-gray-500">{chartSubtitle}</p>
+    <Card className="bg-white rounded-xl shadow-sm mb-8">
+      <CardHeader className="pb-0">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
+          <div>
+            <CardTitle className="text-lg font-semibold">{chartTitle}</CardTitle>
+            <p className="text-sm text-gray-500">{chartSubtitle}</p>
+          </div>
+          
+          {/* Back button - only show when in areas view or when a specific frequency is selected */}
+          {((category === "geography" && geoView === "areas") || 
+            (category === "frequency" && selectedItem)) && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleBackClick}
+              className="flex items-center gap-1 mt-2 md:mt-0"
+            >
+              <ChevronLeft size={16} /> Back
+            </Button>
+          )}
         </div>
         
-        {/* Navigation Tabs */}
-        <div className="mt-4 md:mt-0 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-          {/* Primary Tab: Geography vs Frequency */}
+        {/* Primary Tab: Geography vs Frequency */}
+        <div className="flex flex-wrap gap-4 mt-4">
           <Tabs 
             value={category} 
             onValueChange={(value) => {
@@ -247,93 +263,82 @@ const CustomerGeography = () => {
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          
-          {/* Secondary Navigation Options */}
-          <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
-            {/* Only show Cities/Areas toggle when in Geography category */}
-            {category === "geography" && (
-              <Tabs 
-                value={geoView} 
-                onValueChange={(value) => {
-                  setGeoView(value as "cities" | "areas");
-                  if (value === "cities") {
-                    setSelectedItem(null);
-                  }
-                }}
-                className="w-full md:w-auto"
-              >
-                <TabsList className="w-full md:w-auto">
-                  <TabsTrigger value="cities" className="flex items-center gap-1 w-full md:w-auto">
-                    <Building size={16} /> 
-                    <span className={geoView === "cities" ? "text-blue-500" : ""}>Cities</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="areas" className="flex items-center gap-1 w-full md:w-auto">
-                    <MapPin size={16} /> 
-                    <span>Areas</span>
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            )}
-            
-            {/* Total vs Platform Split toggle - show for both categories */}
+        </div>
+        
+        {/* Secondary navigation options - only show when applicable */}
+        <div className="flex flex-wrap gap-4 mt-4">
+          {/* Only show Cities/Areas toggle when in Geography category */}
+          {category === "geography" && (
             <Tabs 
-              value={platformView} 
-              onValueChange={(value) => setPlatformView(value as "total" | "split")}
+              value={geoView} 
+              onValueChange={(value) => {
+                setGeoView(value as "cities" | "areas");
+                if (value === "cities") {
+                  setSelectedItem(null);
+                }
+              }}
               className="w-full md:w-auto"
             >
               <TabsList className="w-full md:w-auto">
-                <TabsTrigger value="total" className="flex items-center gap-1 w-full md:w-auto">
-                  <BarChart2 size={16} /> Total
+                <TabsTrigger value="cities" className="flex items-center gap-1 w-full md:w-auto">
+                  <Building size={16} /> 
+                  <span className={geoView === "cities" ? "text-blue-500" : ""}>Cities</span>
                 </TabsTrigger>
-                <TabsTrigger value="split" className="flex items-center gap-1 w-full md:w-auto">
-                  <SplitSquareVertical size={16} /> Platform Split
+                <TabsTrigger value="areas" className="flex items-center gap-1 w-full md:w-auto">
+                  <MapPin size={16} /> 
+                  <span>Areas</span>
                 </TabsTrigger>
               </TabsList>
             </Tabs>
-            
-            {/* Back button - only show when in areas view or when a specific frequency is selected */}
-            {((category === "geography" && geoView === "areas") || 
-             (category === "frequency" && selectedItem)) && (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleBackClick}
-                className="flex items-center gap-1"
-              >
-                Back
-              </Button>
-            )}
-          </div>
+          )}
+          
+          {/* Total vs Platform Split toggle - show for both categories */}
+          <Tabs 
+            value={platformView} 
+            onValueChange={(value) => setPlatformView(value as "total" | "split")}
+            className="w-full md:w-auto"
+          >
+            <TabsList className="w-full md:w-auto">
+              <TabsTrigger value="total" className="flex items-center gap-1 w-full md:w-auto">
+                <BarChart2 size={16} /> Total
+              </TabsTrigger>
+              <TabsTrigger value="split" className="flex items-center gap-1 w-full md:w-auto">
+                <SplitSquareVertical size={16} /> Platform Split
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
-      </div>
+      </CardHeader>
       
-      {/* Chart Component */}
-      <ExperienceBarChart 
-        data={currentData || []}
-        layout="horizontal"
-        barSize={platformView === "split" ? 30 : 40}
-        defaultColor={defaultPurpleColor}
-        onClick={handleItemClick}
-        showPercentage={true}
-      />
-      
-      {/* Legend */}
-      {platformView === "split" && (
-        <div className="flex justify-center mt-6">
-          <div className="flex flex-wrap justify-center gap-4">
-            {Object.entries(platformColors).map(([platform, color]) => (
-              <div key={platform} className="flex items-center text-sm">
-                <div 
-                  className="w-3 h-3 rounded-full mr-1.5" 
-                  style={{ backgroundColor: color }}
-                />
-                <span>{platform}</span>
-              </div>
-            ))}
+      <CardContent className="pt-6">
+        {/* Chart Component */}
+        <ExperienceBarChart 
+          data={currentData || []}
+          layout="horizontal"
+          barSize={platformView === "split" ? 30 : 40}
+          defaultColor={defaultPurpleColor}
+          onClick={handleItemClick}
+          showPercentage={true}
+        />
+        
+        {/* Legend */}
+        {platformView === "split" && (
+          <div className="flex justify-center mt-6">
+            <div className="flex flex-wrap justify-center gap-4">
+              {Object.entries(platformColors).map(([platform, color]) => (
+                <div key={platform} className="flex items-center text-sm">
+                  <div 
+                    className="w-3 h-3 rounded-full mr-1.5" 
+                    style={{ backgroundColor: color }}
+                  />
+                  <span>{platform}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

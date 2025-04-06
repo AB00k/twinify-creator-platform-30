@@ -28,6 +28,7 @@ interface ExperienceBarChartProps {
   defaultColor?: string;
   showPercentage?: boolean;
   onClick?: (item: ExperienceRating) => void;
+  stackedData?: boolean;
 }
 
 const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({ 
@@ -37,7 +38,8 @@ const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({
   barSize = 40,
   defaultColor = "#D6BCFA",
   showPercentage = true,
-  onClick
+  onClick,
+  stackedData = false
 }) => {
   // Apply the default color to all data items that don't have a color
   const enhancedData = data.map((item) => ({

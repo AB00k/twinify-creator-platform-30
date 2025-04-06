@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { 
@@ -9,13 +9,15 @@ import {
   Star, 
   Tag, 
   CreditCard,
-  ChevronDown, 
+  ChevronRight,
+  ChevronLeft, 
   Phone, 
   UserCircle,
   Info
 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CustomerSegmentCard from "@/components/CustomerSegmentCard";
 import CustomerProgressBar from "@/components/CustomerProgressBar";
 import CustomerGeography from "@/components/CustomerGeography";
@@ -94,6 +96,14 @@ const Customers = () => {
       bgColor: "bg-blue-100"
     }
   ];
+  
+  // For card carousel
+  const [cardStartIndex, setCardStartIndex] = useState(0);
+  const cardsToShow = 4;
+  
+  // Show more details for cards
+  const [showMoreUserIdentification, setShowMoreUserIdentification] = useState(false);
+  const [showMoreRevenue, setShowMoreRevenue] = useState(false);
 
   // Custom tooltip for pie chart
   const CustomTooltip = ({ active, payload }: any) => {
@@ -105,6 +115,17 @@ const Customers = () => {
       );
     }
     return null;
+  };
+
+  // Handle carousel navigation
+  const nextCards = () => {
+    setCardStartIndex(prevIndex => 
+      Math.min(prevIndex + 1, customerSegments.length - cardsToShow)
+    );
+  };
+  
+  const prevCards = () => {
+    setCardStartIndex(prevIndex => Math.max(0, prevIndex - 1));
   };
 
   return (
@@ -129,127 +150,217 @@ const Customers = () => {
           </div>
         </div>
 
-        {/* Customer Segments Grid - Simplified */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-          {customerSegments.map((segment, index) => (
-            <CustomerSegmentCard
-              key={index}
-              title={segment.title}
-              value={segment.value}
-              percentage={segment.percentage}
-              icon={segment.icon}
-              bgColor={segment.bgColor}
-              className="hover:shadow-md transition-all duration-300"
-            />
-          ))}
+        {/* Customer Segments Carousel */}
+        <div className="mb-6 relative">
+          <div className="flex items-center">
+            <Button 
+              variant="outline" 
+              size="icon"
+              className={`mr-2 ${cardStartIndex === 0 ? 'invisible' : 'visible'}`}
+              onClick={prevCards}
+              disabled={cardStartIndex === 0}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1 overflow-hidden">
+              {customerSegments
+                .slice(cardStartIndex, cardStartIndex + cardsToShow)
+                .map((segment, index) => (
+                  <CustomerSegmentCard
+                    key={index}
+                    title={segment.title}
+                    value={segment.value}
+                    percentage={segment.percentage}
+                    icon={segment.icon}
+                    bgColor={segment.bgColor}
+                    className="hover:shadow-md transition-all duration-300"
+                  />
+                ))}
+            </div>
+            
+            <Button 
+              variant="outline" 
+              size="icon"
+              className={`ml-2 ${cardStartIndex >= customerSegments.length - cardsToShow ? 'invisible' : 'visible'}`}
+              onClick={nextCards}
+              disabled={cardStartIndex >= customerSegments.length - cardsToShow}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          {/* Progress indicator */}
+          <div className="flex justify-center mt-4 gap-1">
+            {Array.from({ length: Math.ceil(customerSegments.length / cardsToShow) }).map((_, idx) => (
+              <div 
+                key={idx}
+                className={`h-1 w-6 rounded-full ${idx === Math.floor(cardStartIndex / cardsToShow) ? 'bg-blue-500' : 'bg-gray-200'}`}
+              />
+            ))}
+          </div>
         </div>
         
-        {/* Main Analysis Grid - Balanced Layout */}
+        {/* Analysis Cards - Better Layout */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {/* Platform Distribution */}
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <h3 className="text-base font-semibold mb-2">Platform Distribution</h3>
-            <div className="flex items-center justify-center h-48">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={platformData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={70}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {platformData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={entry.color}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="grid grid-cols-5 gap-1">
-              {platformData.map((entry, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <div className="w-3 h-3 rounded-full mb-1" style={{ backgroundColor: entry.color }}></div>
-                  <p className="text-xs text-gray-500">{entry.name}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <Card className="bg-white rounded-xl shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-base font-semibold">Platform Distribution</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="flex items-center justify-center h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={platformData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={70}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {platformData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.color}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="grid grid-cols-5 gap-1">
+                {platformData.map((entry, index) => (
+                  <div key={index} className="flex flex-col items-center">
+                    <div className="w-3 h-3 rounded-full mb-1" style={{ backgroundColor: entry.color }}></div>
+                    <p className="text-xs text-gray-500">{entry.name}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* User Identification */}
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <h3 className="text-base font-semibold mb-3">User Identification</h3>
-            <div className="flex flex-col items-center mb-4">
-              <p className="text-gray-500 mb-1 text-sm">Total Customers</p>
-              <h2 className="text-3xl font-bold mb-3">{userIdentificationData.totalCustomers}</h2>
-              
-              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-3">
-                <div className="bg-blue-50 rounded-lg p-2 flex flex-col items-center justify-center">
-                  <div className="flex items-center mb-1">
-                    <UserCircle className="h-4 w-4 text-blue-500 mr-1" />
-                    <span className="text-sm">User ID</span>
-                  </div>
-                  <p className="text-xl font-bold">{userIdentificationData.userId}</p>
-                </div>
+          <Card className="bg-white rounded-xl shadow-sm">
+            <CardHeader className="flex flex-row justify-between items-center pb-2">
+              <CardTitle className="text-base font-semibold">User Identification</CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 w-8 p-0" 
+                onClick={() => setShowMoreUserIdentification(!showMoreUserIdentification)}
+              >
+                <Info size={16} />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col items-center mb-4">
+                <p className="text-gray-500 mb-1 text-sm">Total Customers</p>
+                <h2 className="text-3xl font-bold mb-3">{userIdentificationData.totalCustomers}</h2>
                 
-                <div className="bg-purple-50 rounded-lg p-2 flex flex-col items-center justify-center">
-                  <div className="flex items-center mb-1">
-                    <Phone className="h-4 w-4 text-purple-500 mr-1" />
-                    <span className="text-sm">Phone</span>
+                <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-3">
+                  <div className="bg-blue-50 rounded-lg p-2 flex flex-col items-center justify-center">
+                    <div className="flex items-center mb-1">
+                      <UserCircle className="h-4 w-4 text-blue-500 mr-1" />
+                      <span className="text-sm">User ID</span>
+                    </div>
+                    <p className="text-xl font-bold">{userIdentificationData.userId}</p>
                   </div>
-                  <p className="text-xl font-bold">{userIdentificationData.phone}</p>
+                  
+                  <div className="bg-purple-50 rounded-lg p-2 flex flex-col items-center justify-center">
+                    <div className="flex items-center mb-1">
+                      <Phone className="h-4 w-4 text-purple-500 mr-1" />
+                      <span className="text-sm">Phone</span>
+                    </div>
+                    <p className="text-xl font-bold">{userIdentificationData.phone}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <CustomerProgressBar 
-              value={userIdentificationData.percentageUserId} 
-              label={`${userIdentificationData.percentageUserId}% with user ID`}
-              color="bg-blue-500"
-            />
-          </div>
+              
+              <div className="relative">
+                <CustomerProgressBar 
+                  value={userIdentificationData.percentageUserId} 
+                  label={`${userIdentificationData.percentageUserId}% with user ID`}
+                  color="bg-blue-500"
+                />
+                
+                {showMoreUserIdentification && (
+                  <div className="mt-4 bg-gray-50 p-3 rounded-lg text-sm">
+                    <p className="font-medium mb-2">Details:</p>
+                    <ul className="list-disc pl-5 text-gray-600">
+                      <li>100% of customers have a user ID</li>
+                      <li>0% of customers registered with phone</li>
+                      <li>Customer identification is excellent</li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Revenue by Payment */}
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <h3 className="text-base font-semibold mb-3">Revenue by Payment</h3>
-            <div className="flex flex-col items-center mb-4">
-              <p className="text-gray-500 mb-1 text-sm">Total Revenue</p>
-              <h2 className="text-3xl font-bold mb-3">AED {revenueData.totalRevenue.toLocaleString()}</h2>
-              
-              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-3">
-                <div className="bg-green-50 rounded-lg p-2 flex flex-col">
-                  <div className="flex items-center mb-1">
-                    <CreditCard className="h-4 w-4 text-green-500 mr-1" />
-                    <span className="text-sm">Online</span>
-                  </div>
-                  <p className="text-lg font-bold">AED {revenueData.online.amount.toLocaleString()}</p>
-                  <p className="text-xs text-gray-500">{revenueData.online.percentage}% of revenue</p>
-                </div>
+          <Card className="bg-white rounded-xl shadow-sm">
+            <CardHeader className="flex flex-row justify-between items-center pb-2">
+              <CardTitle className="text-base font-semibold">Revenue by Payment</CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 w-8 p-0" 
+                onClick={() => setShowMoreRevenue(!showMoreRevenue)}
+              >
+                <Info size={16} />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col items-center mb-4">
+                <p className="text-gray-500 mb-1 text-sm">Total Revenue</p>
+                <h2 className="text-3xl font-bold mb-3">AED {revenueData.totalRevenue.toLocaleString()}</h2>
                 
-                <div className="bg-yellow-50 rounded-lg p-2 flex flex-col">
-                  <div className="flex items-center mb-1">
-                    <CreditCard className="h-4 w-4 text-yellow-500 mr-1" />
-                    <span className="text-sm">Cash</span>
+                <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-3">
+                  <div className="bg-green-50 rounded-lg p-2 flex flex-col">
+                    <div className="flex items-center mb-1">
+                      <CreditCard className="h-4 w-4 text-green-500 mr-1" />
+                      <span className="text-sm">Online</span>
+                    </div>
+                    <p className="text-lg font-bold">AED {revenueData.online.amount.toLocaleString()}</p>
+                    <p className="text-xs text-gray-500">{revenueData.online.percentage}% of revenue</p>
                   </div>
-                  <p className="text-lg font-bold">AED {revenueData.cash.amount.toLocaleString()}</p>
-                  <p className="text-xs text-gray-500">{revenueData.cash.percentage}% of revenue</p>
+                  
+                  <div className="bg-yellow-50 rounded-lg p-2 flex flex-col">
+                    <div className="flex items-center mb-1">
+                      <CreditCard className="h-4 w-4 text-yellow-500 mr-1" />
+                      <span className="text-sm">Cash</span>
+                    </div>
+                    <p className="text-lg font-bold">AED {revenueData.cash.amount.toLocaleString()}</p>
+                    <p className="text-xs text-gray-500">{revenueData.cash.percentage}% of revenue</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <CustomerProgressBar 
-              value={revenueData.online.percentage} 
-              label=""
-              color="bg-green-500"
-              bgColor="bg-gray-200"
-            />
-          </div>
+              
+              <div className="relative">
+                <CustomerProgressBar 
+                  value={revenueData.online.percentage} 
+                  label=""
+                  color="bg-green-500"
+                  bgColor="bg-gray-200"
+                />
+                
+                {showMoreRevenue && (
+                  <div className="mt-4 bg-gray-50 p-3 rounded-lg text-sm">
+                    <p className="font-medium mb-2">Details:</p>
+                    <ul className="list-disc pl-5 text-gray-600">
+                      <li>60% revenue from online payments</li>
+                      <li>40% revenue from cash payments</li>
+                      <li>Online payment adoption is good</li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
         
         {/* Main Content with Tabs for Better Organization */}
