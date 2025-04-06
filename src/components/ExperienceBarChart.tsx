@@ -16,23 +16,36 @@ import { cn } from "@/lib/utils";
 interface ExperienceRating {
   name: string;
   value: number;
-  color: string;
+  color?: string;
+  percentage?: number;
 }
 
 interface ExperienceBarChartProps {
   data: ExperienceRating[];
   className?: string;
+  layout?: "vertical" | "horizontal";
+  barSize?: number;
+  defaultColor?: string;
+  showPercentage?: boolean;
+  onClick?: (item: ExperienceRating) => void;
 }
 
-const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({ data, className }) => {
-  // Use consistent light purple color
-  const purpleColor = "#D6BCFA";
-
-  // Apply the color to all data items
+const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({ 
+  data, 
+  className,
+  layout = "vertical",
+  barSize = 40,
+  defaultColor = "#D6BCFA",
+  showPercentage = true,
+  onClick
+}) => {
+  // Apply the default color to all data items that don't have a color
   const enhancedData = data.map((item) => ({
     ...item,
-    color: purpleColor
+    color: item.color || defaultColor
   }));
+
+  const isVertical = layout === "vertical";
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -40,7 +53,10 @@ const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({ data, className
       return (
         <div className="bg-white p-2 shadow-md rounded-md border">
           <p className="font-medium">{data.name}</p>
-          <p>Rating: {data.value.toFixed(1)}/5</p>
+          <p>Value: {data.value}</p>
+          {data.percentage !== undefined && (
+            <p>{data.percentage.toFixed(1)}%</p>
+          )}
         </div>
       );
     }
@@ -55,35 +71,61 @@ const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({ data, className
           margin={{
             top: 20,
             right: 30,
-            left: 10,
-            bottom: 20,
+            left: isVertical ? 120 : 10,
+            bottom: isVertical ? 20 : 40,
           }}
-          barSize={40}
-          layout="vertical"
+          barSize={barSize}
+          layout={layout}
+          onClick={(data) => onClick && onClick(data.activePayload?.[0]?.payload)}
         >
           <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#eee" />
-          <XAxis 
-            type="number"
-            domain={[0, 5]} 
-            tickCount={6}
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12 }}
-          />
-          <YAxis 
-            type="category"
-            dataKey="name" 
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 14, fontWeight: 500 }}
-            width={120}
-          />
+          {isVertical ? (
+            <>
+              <XAxis 
+                type="number"
+                domain={[0, 'dataMax']} 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12 }}
+              />
+              <YAxis 
+                type="category"
+                dataKey="name" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 14, fontWeight: 500 }}
+                width={110}
+              />
+            </>
+          ) : (
+            <>
+              <XAxis 
+                type="category"
+                dataKey="name" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12 }}
+                angle={-45}
+                textAnchor="end"
+                tickMargin={10}
+              />
+              <YAxis 
+                type="number"
+                domain={[0, 'dataMax']} 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12 }}
+                hide={true}
+              />
+            </>
+          )}
           <Tooltip content={<CustomTooltip />} />
           <Bar 
             dataKey="value" 
-            radius={[0, 6, 6, 0]}
+            radius={isVertical ? [0, 6, 6, 0] : [6, 6, 0, 0]}
             animationDuration={1500}
             animationBegin={300}
+            className="cursor-pointer"
           >
             {enhancedData.map((entry, index) => (
               <Cell 
@@ -95,12 +137,14 @@ const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({ data, className
                 }}
               />
             ))}
-            <LabelList 
-              dataKey="value" 
-              position="right" 
-              formatter={(value: number) => value.toFixed(1)} 
-              style={{ fontWeight: 'bold', fill: '#333' }}
-            />
+            {showPercentage && (
+              <LabelList 
+                dataKey={isVertical ? "value" : "percentage"} 
+                position={isVertical ? "right" : "top"} 
+                formatter={(value: number) => isVertical ? value : `${value}%`} 
+                style={{ fontWeight: 'bold', fill: '#333' }}
+              />
+            )}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
