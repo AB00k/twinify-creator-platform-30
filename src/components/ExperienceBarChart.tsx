@@ -76,7 +76,7 @@ const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({
           }}
           barSize={barSize}
           layout={layout}
-          onClick={(data) => onClick && onClick(data.activePayload?.[0]?.payload)}
+          onClick={(data) => onClick && data.activePayload?.[0]?.payload && onClick(data.activePayload[0].payload)}
         >
           <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#eee" />
           {isVertical ? (
@@ -141,7 +141,7 @@ const ExperienceBarChart: React.FC<ExperienceBarChartProps> = ({
               <LabelList 
                 dataKey={isVertical ? "value" : "percentage"} 
                 position={isVertical ? "right" : "top"} 
-                formatter={(value: number) => isVertical ? value : `${value}%`} 
+                formatter={(value: number) => isVertical ? value : `${value.toFixed(1)}%`} 
                 style={{ fontWeight: 'bold', fill: '#333' }}
               />
             )}

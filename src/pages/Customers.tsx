@@ -14,11 +14,12 @@ import {
   UserCircle
 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CustomerSegmentCard from "@/components/CustomerSegmentCard";
 import CustomerProgressBar from "@/components/CustomerProgressBar";
 import CustomerGeography from "@/components/CustomerGeography";
+import CustomerCohort from "@/components/CustomerCohort";
+import CustomerProfile from "@/components/CustomerProfile";
 
 const Customers = () => {
   // Platform distribution data
@@ -195,7 +196,7 @@ const Customers = () => {
               </Button>
             </div>
             
-            <div className="flex flex-col items-center mb-8">
+            <div className="flex flex-col items-center mb-6">
               <p className="text-gray-500 mb-1">Total Customers</p>
               <h2 className="text-4xl font-bold mb-4">{userIdentificationData.totalCustomers}</h2>
               
@@ -234,7 +235,7 @@ const Customers = () => {
               </Button>
             </div>
             
-            <div className="flex flex-col items-center mb-8">
+            <div className="flex flex-col items-center mb-6">
               <p className="text-gray-500 mb-1">Total Revenue</p>
               <h2 className="text-4xl font-bold mb-4">AED {revenueData.totalRevenue.toLocaleString()}</h2>
               
@@ -287,8 +288,14 @@ const Customers = () => {
           ))}
         </div>
         
-        {/* Customer Geography Section - updated component */}
+        {/* Customer Geography Section */}
         <CustomerGeography />
+        
+        {/* Customer Cohort Section */}
+        <CustomerCohort />
+        
+        {/* Customer Profile Section */}
+        <CustomerProfile />
       </div>
     </div>
   );

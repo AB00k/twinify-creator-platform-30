@@ -1,13 +1,11 @@
 
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
 import ExperienceBarChart from "./ExperienceBarChart";
 import { Button } from "@/components/ui/button";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  MapPin, 
+  MapPin,
   Building, 
-  RadioTower, 
   SplitSquareVertical,
   BarChart2
 } from "lucide-react";
@@ -124,24 +122,7 @@ const frequencyPlatformData = {
     { name: "Deliveroo", value: 10, percentage: 20, color: platformColors["Deliveroo"] },
     { name: "Careem", value: 5, percentage: 10, color: platformColors["Careem"] },
   ],
-  "Monthly": [
-    { name: "Talabat", value: 18, percentage: 40, color: platformColors["Talabat"] },
-    { name: "Noon", value: 12, percentage: 26.7, color: platformColors["Noon"] },
-    { name: "Deliveroo", value: 10, percentage: 22.2, color: platformColors["Deliveroo"] },
-    { name: "Careem", value: 5, percentage: 11.1, color: platformColors["Careem"] },
-  ],
-  "Quarterly": [
-    { name: "Talabat", value: 10, percentage: 40, color: platformColors["Talabat"] },
-    { name: "Noon", value: 8, percentage: 32, color: platformColors["Noon"] },
-    { name: "Deliveroo", value: 4, percentage: 16, color: platformColors["Deliveroo"] },
-    { name: "Careem", value: 3, percentage: 12, color: platformColors["Careem"] },
-  ],
-  "Yearly": [
-    { name: "Talabat", value: 6, percentage: 40, color: platformColors["Talabat"] },
-    { name: "Noon", value: 5, percentage: 33.3, color: platformColors["Noon"] },
-    { name: "Deliveroo", value: 2, percentage: 13.3, color: platformColors["Deliveroo"] },
-    { name: "Careem", value: 2, percentage: 13.3, color: platformColors["Careem"] },
-  ]
+  // More frequency splits would be defined here
 };
 
 const CustomerGeography = () => {
@@ -243,71 +224,72 @@ const CustomerGeography = () => {
           <p className="text-sm text-gray-500">{chartSubtitle}</p>
         </div>
         
-        {/* Primary Toggle: Geography vs Frequency */}
-        <div className="mt-4 md:mt-0 flex flex-col md:flex-row gap-3 items-start md:items-center">
-          <ToggleGroup 
-            type="single" 
+        {/* Navigation Tabs */}
+        <div className="mt-4 md:mt-0 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          {/* Primary Tab: Geography vs Frequency */}
+          <Tabs 
             value={category} 
             onValueChange={(value) => {
-              if (value) {
-                setCategory(value as "geography" | "frequency");
-                setSelectedItem(null);
-              }
+              setCategory(value as "geography" | "frequency");
+              setSelectedItem(null);
+              setGeoView("cities");
             }}
-            className="mb-2 md:mb-0"
+            className="w-full md:w-auto"
           >
-            <ToggleGroupItem value="geography" className="flex items-center gap-1">
-              <MapPin size={16} /> Geography
-            </ToggleGroupItem>
-            <ToggleGroupItem value="frequency" className="flex items-center gap-1">
-              <RadioTower size={16} /> Frequency
-            </ToggleGroupItem>
-          </ToggleGroup>
+            <TabsList className="w-full md:w-auto">
+              <TabsTrigger value="geography" className="flex items-center gap-1 w-full md:w-auto">
+                <MapPin size={16} className="text-blue-500" /> 
+                <span className={category === "geography" ? "text-blue-500" : ""}>Geography</span>
+              </TabsTrigger>
+              <TabsTrigger value="frequency" className="flex items-center gap-1 w-full md:w-auto">
+                <BarChart2 size={16} /> 
+                <span>Frequency</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
           
-          {/* Secondary toggles based on primary selection */}
-          <div className="flex gap-3">
-            {/* City/Area toggle - only show for geography */}
+          {/* Secondary Navigation Options */}
+          <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
+            {/* Only show Cities/Areas toggle when in Geography category */}
             {category === "geography" && (
-              <ToggleGroup 
-                type="single" 
+              <Tabs 
                 value={geoView} 
                 onValueChange={(value) => {
-                  if (value) {
-                    setGeoView(value as "cities" | "areas");
-                    if (value === "cities") {
-                      setSelectedItem(null);
-                    } else if (!selectedItem) {
-                      setSelectedItem("Dubai"); // Default to Dubai when switching to areas
-                    }
+                  setGeoView(value as "cities" | "areas");
+                  if (value === "cities") {
+                    setSelectedItem(null);
                   }
                 }}
+                className="w-full md:w-auto"
               >
-                <ToggleGroupItem value="cities" className="flex items-center gap-1">
-                  <Building size={16} /> Cities
-                </ToggleGroupItem>
-                <ToggleGroupItem value="areas" className="flex items-center gap-1">
-                  <MapPin size={16} /> Areas
-                </ToggleGroupItem>
-              </ToggleGroup>
+                <TabsList className="w-full md:w-auto">
+                  <TabsTrigger value="cities" className="flex items-center gap-1 w-full md:w-auto">
+                    <Building size={16} /> 
+                    <span className={geoView === "cities" ? "text-blue-500" : ""}>Cities</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="areas" className="flex items-center gap-1 w-full md:w-auto">
+                    <MapPin size={16} /> 
+                    <span>Areas</span>
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             )}
             
-            {/* Total vs Platform Split toggle - show for both */}
-            <ToggleGroup 
-              type="single" 
+            {/* Total vs Platform Split toggle - show for both categories */}
+            <Tabs 
               value={platformView} 
-              onValueChange={(value) => {
-                if (value) {
-                  setPlatformView(value as "total" | "split");
-                }
-              }}
+              onValueChange={(value) => setPlatformView(value as "total" | "split")}
+              className="w-full md:w-auto"
             >
-              <ToggleGroupItem value="total" className="flex items-center gap-1">
-                <BarChart2 size={16} /> Total
-              </ToggleGroupItem>
-              <ToggleGroupItem value="split" className="flex items-center gap-1">
-                <SplitSquareVertical size={16} /> Platform Split
-              </ToggleGroupItem>
-            </ToggleGroup>
+              <TabsList className="w-full md:w-auto">
+                <TabsTrigger value="total" className="flex items-center gap-1 w-full md:w-auto">
+                  <BarChart2 size={16} /> Total
+                </TabsTrigger>
+                <TabsTrigger value="split" className="flex items-center gap-1 w-full md:w-auto">
+                  <SplitSquareVertical size={16} /> Platform Split
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
             
             {/* Back button - only show when in areas view or when a specific frequency is selected */}
             {((category === "geography" && geoView === "areas") || 

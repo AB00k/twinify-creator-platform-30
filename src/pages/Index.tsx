@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
@@ -11,7 +10,6 @@ import {
   TrendingDown,
 } from "lucide-react";
 import { Sparklines, SparklinesLine } from "react-sparklines";
-import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -28,7 +26,7 @@ const Index = () => {
       icon: <DollarSign className="w-5 h-5 text-white" />,
       iconClassName: "bg-dashGreen",
       trendValue: "+12%",
-      trendDirection: "up",
+      trendDirection: "up" as const,
     },
     {
       title: "Orders",
@@ -36,7 +34,7 @@ const Index = () => {
       icon: <ShoppingCart className="w-5 h-5 text-white" />,
       iconClassName: "bg-dashBlue",
       trendValue: "-5%",
-      trendDirection: "down",
+      trendDirection: "down" as const,
     },
   ];
 
@@ -53,7 +51,7 @@ const Index = () => {
       icon: <TrendingUp className="w-5 h-5 text-white" />,
       iconClassName: "bg-dashPurple",
       trendValue: "+3%",
-      trendDirection: "up",
+      trendDirection: "up" as const,
     },
     {
       title: "Customer Churn",
@@ -61,7 +59,7 @@ const Index = () => {
       icon: <TrendingDown className="w-5 h-5 text-white" />,
       iconClassName: "bg-dashLightBlue",
       trendValue: "-1%",
-      trendDirection: "down",
+      trendDirection: "down" as const,
     },
   ];
 
