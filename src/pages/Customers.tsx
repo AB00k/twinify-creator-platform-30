@@ -12,8 +12,7 @@ import {
   ChevronRight,
   ChevronLeft, 
   Phone, 
-  UserCircle,
-  Info
+  UserCircle
 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,6 +22,7 @@ import CustomerProgressBar from "@/components/CustomerProgressBar";
 import CustomerGeography from "@/components/CustomerGeography";
 import CustomerCohort from "@/components/CustomerCohort";
 import CustomerProfile from "@/components/CustomerProfile";
+import StatCard from "@/components/StatCard";
 
 const Customers = () => {
   // Platform distribution data
@@ -59,40 +59,40 @@ const Customers = () => {
       title: "Total Customers", 
       value: 200, 
       percentage: 100,
-      icon: <Users className="h-6 w-6 text-blue-500" />,
+      icon: <Users className="h-5 w-5 text-blue-500" />,
       bgColor: "bg-blue-100"
     },
     { 
       title: "New Customers", 
       value: 16, 
       percentage: 8,
-      icon: <TrendingUp className="h-6 w-6 text-blue-500" />,
+      icon: <TrendingUp className="h-5 w-5 text-blue-500" />,
       bgColor: "bg-blue-100"
     },
     { 
       title: "Repeat Customers", 
       value: 43, 
       percentage: 22,
-      icon: <RefreshCw className="h-6 w-6 text-green-500" />,
+      icon: <RefreshCw className="h-5 w-5 text-green-500" />,
       bgColor: "bg-green-100"
     },
     { 
       title: "Premium Customers", 
       value: 141, 
       percentage: 71,
-      icon: <Star className="h-6 w-6 text-yellow-500" />,
+      icon: <Star className="h-5 w-5 text-yellow-500" />,
       bgColor: "bg-yellow-100"
     },
     { 
       title: "Promo Usage", 
       value: "44%", 
-      icon: <Tag className="h-6 w-6 text-purple-500" />,
+      icon: <Tag className="h-5 w-5 text-purple-500" />,
       bgColor: "bg-purple-100"
     },
     { 
       title: "Avg. Spending", 
       value: "AED 1027", 
-      icon: <CreditCard className="h-6 w-6 text-blue-500" />,
+      icon: <CreditCard className="h-5 w-5 text-blue-500" />,
       bgColor: "bg-blue-100"
     }
   ];
@@ -152,31 +152,24 @@ const Customers = () => {
 
         {/* Customer Segments Carousel */}
         <div className="mb-6 relative">
-          <div className="flex items-center">
-            <Button 
-              variant="outline" 
-              size="icon"
-              className={`mr-2 ${cardStartIndex === 0 ? 'invisible' : 'visible'}`}
-              onClick={prevCards}
-              disabled={cardStartIndex === 0}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1 overflow-hidden">
-              {customerSegments
-                .slice(cardStartIndex, cardStartIndex + cardsToShow)
-                .map((segment, index) => (
-                  <CustomerSegmentCard
-                    key={index}
-                    title={segment.title}
-                    value={segment.value}
-                    percentage={segment.percentage}
-                    icon={segment.icon}
-                    bgColor={segment.bgColor}
-                    className="hover:shadow-md transition-all duration-300"
-                  />
-                ))}
+          <div className="flex">
+            <div className="flex-1 overflow-hidden">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {customerSegments
+                  .slice(cardStartIndex, cardStartIndex + cardsToShow)
+                  .map((segment, index) => (
+                    <StatCard
+                      key={index}
+                      title={segment.title}
+                      value={segment.value}
+                      icon={segment.icon}
+                      iconClassName={segment.bgColor}
+                      className="hover:shadow-md transition-all duration-300"
+                      trendValue={segment.percentage ? `${segment.percentage}%` : undefined}
+                      trendDirection="neutral"
+                    />
+                  ))}
+              </div>
             </div>
             
             <Button 
@@ -245,16 +238,8 @@ const Customers = () => {
 
           {/* User Identification */}
           <Card className="bg-white rounded-xl shadow-sm">
-            <CardHeader className="flex flex-row justify-between items-center pb-2">
+            <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold">User Identification</CardTitle>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 w-8 p-0" 
-                onClick={() => setShowMoreUserIdentification(!showMoreUserIdentification)}
-              >
-                <Info size={16} />
-              </Button>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col items-center mb-4">
@@ -297,22 +282,25 @@ const Customers = () => {
                     </ul>
                   </div>
                 )}
+                
+                <div className="flex justify-center mt-3">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-xs"
+                    onClick={() => setShowMoreUserIdentification(!showMoreUserIdentification)}
+                  >
+                    {showMoreUserIdentification ? "Hide Details" : "Show Details"}
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Revenue by Payment */}
           <Card className="bg-white rounded-xl shadow-sm">
-            <CardHeader className="flex flex-row justify-between items-center pb-2">
+            <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold">Revenue by Payment</CardTitle>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 w-8 p-0" 
-                onClick={() => setShowMoreRevenue(!showMoreRevenue)}
-              >
-                <Info size={16} />
-              </Button>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col items-center mb-4">
@@ -358,6 +346,17 @@ const Customers = () => {
                     </ul>
                   </div>
                 )}
+                
+                <div className="flex justify-center mt-3">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-xs"
+                    onClick={() => setShowMoreRevenue(!showMoreRevenue)}
+                  >
+                    {showMoreRevenue ? "Hide Details" : "Show Details"}
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
