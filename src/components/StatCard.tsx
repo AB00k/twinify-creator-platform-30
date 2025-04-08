@@ -27,25 +27,21 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => {
   return (
     <div 
-      className={cn("stat-card animate-fade-in", className)}
+      className={cn("stat-card bg-white rounded-xl p-4 shadow-sm animate-fade-in", className)}
       style={style}
     >
       <div className="flex flex-col h-full">
-        <div className="flex mb-2">
+        <div className="flex justify-between items-start mb-2">
           <IconBadge 
             icon={icon} 
             className={cn("p-2 rounded-full", iconClassName)} 
             size="sm"
           />
-        </div>
-        <div>
-          <p className="text-sm text-gray-500 mb-1">{title}</p>
-          <h3 className="text-2xl font-semibold">{value}</h3>
           
           {trendValue && (
             <div
               className={cn(
-                "flex items-center text-xs mt-1",
+                "flex items-center text-xs",
                 trendDirection === "up"
                   ? "text-green-500"
                   : trendDirection === "down"
@@ -61,6 +57,10 @@ const StatCard: React.FC<StatCardProps> = ({
               {trendValue}
             </div>
           )}
+        </div>
+        <div className="mt-2">
+          <h3 className="text-2xl font-semibold">{value}</h3>
+          <p className="text-sm text-gray-500 mt-1">{title}</p>
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -12,7 +11,8 @@ import {
   ChevronRight,
   ChevronLeft, 
   Phone, 
-  UserCircle
+  UserCircle,
+  ShoppingBag
 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,6 +22,7 @@ import CustomerProgressBar from "@/components/CustomerProgressBar";
 import CustomerGeography from "@/components/CustomerGeography";
 import CustomerCohort from "@/components/CustomerCohort";
 import CustomerProfile from "@/components/CustomerProfile";
+import OrderHistory from "@/components/OrderHistory";
 import StatCard from "@/components/StatCard";
 
 const Customers = () => {
@@ -368,6 +369,10 @@ const Customers = () => {
             <TabsTrigger value="geography" className="px-4 py-2">Geography</TabsTrigger>
             <TabsTrigger value="cohort" className="px-4 py-2">Customer Retention</TabsTrigger>
             <TabsTrigger value="profile" className="px-4 py-2">Customer Filters</TabsTrigger>
+            <TabsTrigger value="orders" className="px-4 py-2 flex items-center gap-1">
+              <ShoppingBag className="h-4 w-4" />
+              Order History
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="geography" className="mt-0">
@@ -380,6 +385,10 @@ const Customers = () => {
           
           <TabsContent value="profile" className="mt-0">
             <CustomerProfile />
+          </TabsContent>
+          
+          <TabsContent value="orders" className="mt-0">
+            <OrderHistory />
           </TabsContent>
         </Tabs>
       </div>
