@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
@@ -8,6 +9,7 @@ import {
   Users,
   TrendingUp,
   TrendingDown,
+  ClipboardList,
 } from "lucide-react";
 import { Sparklines, SparklinesLine } from "react-sparklines";
 import { Link } from "react-router-dom";
@@ -87,6 +89,12 @@ const Index = () => {
             <Link to="/reviews">
               <Button className="bg-dashBlue hover:bg-blue-600 text-white">
                 Reviews & Ratings
+              </Button>
+            </Link>
+            <Link to="/orders">
+              <Button className="bg-dashGreen hover:bg-green-600 text-white">
+                <ClipboardList className="w-4 h-4 mr-2" />
+                Order History
               </Button>
             </Link>
           </div>
